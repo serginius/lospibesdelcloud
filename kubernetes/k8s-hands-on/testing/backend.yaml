@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-k8s-hands-on
+  labels:
+    app: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets: 
+        - name: registry.imaginelearning.net
+      containers:
+        - name: k8s-hands-on
+          image: registry.imaginelearning.net/ilprovo/k8s-hands-on:latest
+          imagePullPolicy: IfNotPresent
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: backend-k8s-hands-on
+spec:
+    selector:
+         app: backend
+    type: NodePort
+    ports:
+    - name: backend-k8s-hands-on
+      port: 80
+      targetPort: 9090
+      nodePort: 30003
+      protocol: TCP
